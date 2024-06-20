@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { IoClose } from "react-icons/io5";
+// import { IoClose } from "react-icons/io5";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import uploadFile from "../helpers/uploadFile";
+// import uploadFile from "../helpers/uploadFile";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { PiUserCircle } from "react-icons/pi";
+// import { PiUserCircle } from "react-icons/pi";
 import Avatar from "../components/Avatar";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "../redux/userSlice";
+import { setToken } from "../redux/userSlice";
 
 const CheckPasswordPage = () => {
   const [data, setData] = useState({
@@ -39,17 +39,23 @@ const CheckPasswordPage = () => {
     e.preventDefault();
     e.stopPropagation();
     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/password`;
+    const res = {
+      userId: location?.state?._id,
+      password: data.password,
+    };
 
     try {
-      const response = await axios({
-        method: "post",
-        url: URL,
-        data: {
-          userId: location?.state?._id,
-          password: data.password,
-        },
-        withCredentials: true,
-      });
+      // const response = await axios({
+      //   method: "post",
+      //   url: URL,
+      //   data: {
+      //     userId: location?.state?._id,
+      //     password: data.password,
+      //   },
+      //   withCredentials: true,
+      // });
+
+      const response = await axios.post(URL, res);
 
       toast.success(response.data.message);
 

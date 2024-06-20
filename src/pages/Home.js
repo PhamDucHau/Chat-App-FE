@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   logout,
@@ -13,7 +13,7 @@ import logo from "../assets/logo.png";
 import io from "socket.io-client";
 
 const Home = () => {
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,26 +25,36 @@ const Home = () => {
       //   url: URL,
       //   withCredentials: true,
       // });
-      const response = await axios({
-        method: "post",
-        url: URL,
-        data: {
-          token: localStorage.token,
-        },
-        withCredentials: true,
-      });
-      console.log("response", response);
+      // const response = await axios({
+      //   method: "post",
+      //   url: URL,
+      //   data: {
+      //     token: localStorage.token,
+      //   },
+      //   withCredentials: true,
+      // });
+      // console.log("response", response);
+      const data = {
+        token: localStorage.token,
+      };
+      const response = await axios.post(URL, data);
+      console.log("response home first", response);
       dispatch(setUser(response.data.data));
       if (response.data.data.logout) {
         dispatch(logout());
         navigate("/email");
       }
     } catch (error) {
+      navigate("/email");
       console.log("error", error);
     }
   };
   useEffect(() => {
-    fetchUserDetails();
+    if (localStorage.token) {
+      fetchUserDetails();
+    } else {
+      navigate("/email");
+    }
   }, []);
 
   // socket connection
