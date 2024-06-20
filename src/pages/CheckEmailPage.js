@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { PiUserCircle } from "react-icons/pi";
+import Loading from "../components/Loading";
 
 const CheckEmailPage = () => {
   const [data, setData] = useState({
     email: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -29,8 +31,9 @@ const CheckEmailPage = () => {
     e.stopPropagation();
     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/email`;
     try {
+      setLoading(true);
       const response = await axios.post(URL, data);
-
+      setLoading(false);
       toast.success(response.data.message);
       if (response.data.success) {
         setData({
@@ -52,6 +55,11 @@ const CheckEmailPage = () => {
         </div>
 
         <h3>Welcome to chat app!</h3>
+        {loading && (
+          <div className="w-full h-full flex sticky bottom-0 justify-center items-center">
+            <Loading />
+          </div>
+        )}
 
         <form className="grid gap-4 mt-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1">

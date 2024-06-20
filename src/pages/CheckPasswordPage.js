@@ -8,11 +8,13 @@ import toast from "react-hot-toast";
 import Avatar from "../components/Avatar";
 import { useDispatch } from "react-redux";
 import { setToken } from "../redux/userSlice";
+import Loading from "../components/Loading";
 
 const CheckPasswordPage = () => {
   const [data, setData] = useState({
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,9 +56,9 @@ const CheckPasswordPage = () => {
       //   },
       //   withCredentials: true,
       // });
-
+      setLoading(true);
       const response = await axios.post(URL, res);
-
+      setLoading(false);
       toast.success(response.data.message);
 
       if (response.data.success) {
@@ -88,6 +90,11 @@ const CheckPasswordPage = () => {
         </div>
 
         <h3>Welcome to chat app!</h3>
+        {loading && (
+          <div className="w-full h-full flex sticky bottom-0 justify-center items-center">
+            <Loading />
+          </div>
+        )}
 
         <form className="grid gap-4 mt-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1">

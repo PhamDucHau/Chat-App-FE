@@ -12,6 +12,7 @@ import SearchUser from "./SearchUser";
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from "../redux/userSlice";
+import Loading from "./Loading";
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
@@ -21,10 +22,12 @@ const Sidebar = () => {
   const socketConnection = useSelector(
     (state) => state?.user?.socketConnection
   );
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     if (socketConnection) {
+      setLoading(true);
       socketConnection.emit("sidebar", user._id);
       socketConnection.on("conversation", (data) => {
         const conversationUserData = data.map((conversationUser, index) => {
@@ -48,6 +51,7 @@ const Sidebar = () => {
           }
         });
         setAllUser(conversationUserData);
+        setLoading(false);
       });
     }
   }, [socketConnection, user]);
@@ -122,6 +126,11 @@ const Sidebar = () => {
               <p className="text-lg text-center text-slate-400">
                 Explore users to start a conversation with.
               </p>
+            </div>
+          )}
+          {loading && (
+            <div className="w-full h-full flex sticky bottom-0 justify-center items-center">
+              <Loading />
             </div>
           )}
 
